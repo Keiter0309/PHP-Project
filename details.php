@@ -126,27 +126,28 @@ $conn->close();
     </section>
     <!-- END section -->
 
-    <section class="py-5 bg-light">
-      <div class="container">
-        <?php if ($room): ?>
-          <div class="row">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-              <img src="images/<?php echo $room['room_image']; ?>" width='500em' height='350em' alt="<?php echo $room['room_type']; ?>" class="rounded shadow-sm">
-            </div>
-            <div class="col-lg-6">
-              <h1 class="display-4 text-primary"><?php echo $room['room_type']; ?></h1>
-              <p class="lead"><?php echo $room['room_description']?></p>
-              <p class="lead font-weight-bold"><?php echo $room['price']; ?>$ / per night</p>
-              <p><a href="reservation.php" class="btn btn-primary btn-lg">Reserve Now</a></p>
-            </div>
-          </div>
-        <?php else: ?>
-          <div class="alert alert-danger" role="alert">
-            No room details found.
-          </div>
-        <?php endif; ?>
+    <section class="py-5 bg-light" data-aos="fade">
+  <div class="container">
+    <?php if ($room): ?>
+      <div class="row align-items-center">
+        <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+          <img src="images/<?php echo $room['room_image']; ?>" width="500em" height="350em" alt="<?php echo $room['room_type']; ?>" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-lg-6 order-lg-1">
+          <h2 class="display-4 text-primary"><?php echo $room['room_type']; ?></h2>
+          <p class="lead"><?php echo $room['room_description']?></p>
+          <p class="lead font-weight-bold"><?php echo $room['price']; ?>$ / per night</p>
+          <p><a href="reservation.php" class="btn btn-primary btn-lg">Reserve Now</a></p>
+        </div>
       </div>
-    </section>
+    <?php else: ?>
+      <div class="alert alert-danger" role="alert">
+        No room details found.
+      </div>
+    <?php endif; ?>
+  </div>
+</section>
+
 
     <section class="section testimonial-section bg-light">
       <div class="container">
