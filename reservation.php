@@ -1,12 +1,9 @@
-<?php
-session_start();
-?>
 <!DOCTYPE HTML>
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Reversation - Sogo Hotel</title>
+    <title>Reservation - Sogo Hotel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -20,6 +17,7 @@ session_start();
     <link rel="stylesheet" href="css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="css/jquery.timepicker.css">
     <link rel="stylesheet" href="css/fancybox.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <link rel="stylesheet" href="fonts/ionicons/css/ionicons.min.css">
     <link rel="stylesheet" href="fonts/fontawesome/css/font-awesome.min.css">
@@ -102,34 +100,83 @@ session_start();
       <div class="container">
         <div class="row">
           <div class="col-md-7" data-aos="fade-up" data-aos-delay="100">
-            
-            <form action="#" method="post" class="bg-white p-md-5 p-4 mb-5 border">
+            <?php 
+            include 'php/db_connect.php';
+            session_start();
+            if(isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['email']) && isset($_POST['checkin_date']) && isset($_POST['checkout_date']) && isset($_POST['adults']) && isset($_POST['children']) && isset($_POST['notes'])) {
+              $name = $_POST['name'];
+              $phone = $_POST['phone'];
+              $user_id = $_SESSION['user_id'];
+              $room_id = $_GET['id'];
+              $email = $_POST['email'];
+              $check_in = $_POST['checkin_date'];
+              $check_out = $_POST['checkout_date'];
+              $adults = $_POST['adults'];
+              $children = $_POST['children'];
+              $notes = $_POST['notes'];
+
+              $sql = "INSERT INTO reservations (user_id, room_id, name, phone, email, check_in, check_out, children, adults, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+              $stmt = $conn->prepare($sql);
+              $stmt->bind_param("iisssssiii", $user_id, $room_id, $name, $phone, $email, $check_in, $check_out, $children, $adults, $notes);
+
+              if ($stmt->execute()) {
+                echo "<script>
+                  Swal.fire({
+                    title: 'Success!',
+                    text: 'Reservation has been made!',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                  }).then((result) => {
+                    if(result.isConfirmed) {
+                      window.location.href = 'index.php';
+                    }
+                  });
+                </script>";
+              } else {
+                echo "<script>
+                  Swal.fire({
+                    title: 'Error!',
+                    text: 'Error in making reservation!',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                  }).then((result) => {
+                    if(result.isConfirmed) {
+                      window.location.href = 'index.php';
+                    }
+                  });
+                </script>";
+              }
+              $stmt->close();
+              $conn->close();
+            }
+            ?>
+            <form action="reservation.php" method="get" class="bg-white p-md-5 p-4 mb-5 border">
               <div class="row">
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="name">Name</label>
-                  <input type="text" id="name" class="form-control ">
+                  <input type="text" name="name" id="name" class="form-control ">
                 </div>
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="phone">Phone</label>
-                  <input type="text" id="phone" class="form-control ">
+                  <input type="text" name="phone" id="phone" class="form-control ">
                 </div>
               </div>
           
               <div class="row">
                 <div class="col-md-12 form-group">
                   <label class="text-black font-weight-bold" for="email">Email</label>
-                  <input type="email" id="email" class="form-control ">
+                  <input type="email" name="email" id="email" class="form-control ">
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="checkin_date">Date Check In</label>
-                  <input type="text" id="checkin_date" class="form-control">
+                  <input type="text" name="checkin_date" id="checkin_date" class="form-control">
                 </div>
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="checkout_date">Date Check Out</label>
-                  <input type="text" id="checkout_date" class="form-control">
+                  <input type="text" name="checkout_date" id="checkout_date" class="form-control">
                 </div>
               </div>
 
@@ -138,11 +185,11 @@ session_start();
                   <label for="adults" class="font-weight-bold text-black">Adults</label>
                   <div class="field-icon-wrap">
                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                    <select name="" id="adults" class="form-control">
-                      <option value="">1</option>
-                      <option value="">2</option>
-                      <option value="">3</option>
-                      <option value="">4+</option>
+                    <select name="adults" id="adults" class="form-control">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4+">4+</option>
                     </select>
                   </div>
                 </div>
@@ -150,11 +197,11 @@ session_start();
                   <label for="children" class="font-weight-bold text-black">Children</label>
                   <div class="field-icon-wrap">
                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                    <select name="" id="children" class="form-control">
-                      <option value="">1</option>
-                      <option value="">2</option>
-                      <option value="">3</option>
-                      <option value="">4+</option>
+                    <select name="children" id="children" class="form-control">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4+">4+</option>
                     </select>
                   </div>
                 </div>
@@ -165,16 +212,17 @@ session_start();
               <div class="row mb-4">
                 <div class="col-md-12 form-group">
                   <label class="text-black font-weight-bold" for="message">Notes</label>
-                  <textarea name="message" id="message" class="form-control " cols="30" rows="8"></textarea>
+                  <textarea name="notes" id="message" class="form-control " cols="30" rows="8"></textarea>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6 form-group">
-                  <input type="submit" value="Reserve Now" class="btn btn-primary text-white py-3 px-5 font-weight-bold">
+                  <form action="reservation" method="post">
+                    <input type="submit" value="Reserve Now" class="btn btn-primary text-white py-3 px-5">
+                  </form>
                 </div>
               </div>
             </form>
-
           </div>
           <div class="col-md-5" data-aos="fade-up" data-aos-delay="200">
             <div class="row">
