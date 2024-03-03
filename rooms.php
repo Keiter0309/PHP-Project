@@ -135,6 +135,7 @@ session_start();
                                 $rooms = $result->fetch_all(MYSQLI_ASSOC);
                                 if (count($rooms) > 0) {
                                     foreach ($rooms as $room) {
+                                        $_SESSION['room_id'] = $room['id'];
                                         echo "<div class='col-md-6 col-lg-4 mb-5' data-aos='fade-up'>";
                                         echo "<a href='details.php?id=" . $room['id'] . "' class='room'>";
                                         echo "<figure class='img-wrap'>";

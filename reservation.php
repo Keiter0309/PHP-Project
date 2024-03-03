@@ -9,7 +9,6 @@
     <meta name="keywords" content="" />
     <meta name="author" content="" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=|Roboto+Sans:400,700|Playfair+Display:400,700">
-
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/owl.carousel.min.css">
@@ -100,83 +99,90 @@
       <div class="container">
         <div class="row">
           <div class="col-md-7" data-aos="fade-up" data-aos-delay="100">
-            <?php 
-            include 'php/db_connect.php';
-            session_start();
-            if(isset($_POST['name']) && isset($_POST['phone']) && isset($_POST['email']) && isset($_POST['checkin_date']) && isset($_POST['checkout_date']) && isset($_POST['adults']) && isset($_POST['children']) && isset($_POST['notes'])) {
-              $name = $_POST['name'];
-              $phone = $_POST['phone'];
-              $user_id = $_SESSION['user_id'];
-              $room_id = $_GET['id'];
-              $email = $_POST['email'];
-              $check_in = $_POST['checkin_date'];
-              $check_out = $_POST['checkout_date'];
-              $adults = $_POST['adults'];
-              $children = $_POST['children'];
-              $notes = $_POST['notes'];
+          <?php 
+          include 'php/db_connect.php';
+          session_start();
+          if(isset($_SESSION['username']) && isset($_SESSION['phone']) && isset($_SESSION['email']) && isset($_POST['checkin_date']) && isset($_POST['checkout_date']) && isset($_POST['adults']) && isset($_POST['children']) && isset($_POST['notes']) && isset($_GET['id'])) {
+            $user_id = $_SESSION['user_id'];
+            $room_id = $_GET['id'];
+            $name = $_SESSION['username'];
+            $phone = $_SESSION['phone'];
+            $email = $_SESSION['email'];
+            $check_in = $_POST['checkin_date'];
+            $check_out = $_POST['checkout_date'];
+            $adults = $_POST['adults'];
+            $children = $_POST['children'];
+            $notes = $_POST['notes'];
 
-              $sql = "INSERT INTO reservations (user_id, room_id, name, phone, email, check_in, check_out, children, adults, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-              $stmt = $conn->prepare($sql);
-              $stmt->bind_param("iisssssiii", $user_id, $room_id, $name, $phone, $email, $check_in, $check_out, $children, $adults, $notes);
+            $sql = "INSERT INTO reservations (user_id, room_id, name, phone, email, check_in, check_out, adults, children, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("iisssssiss", $user_id, $room_id, $name, $phone, $email, $check_in, $check_out, $adults, $children, $notes);
 
-              if ($stmt->execute()) {
-                echo "<script>
-                  Swal.fire({
-                    title: 'Success!',
-                    text: 'Reservation has been made!',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                  }).then((result) => {
-                    if(result.isConfirmed) {
-                      window.location.href = 'index.php';
-                    }
-                  });
-                </script>";
-              } else {
-                echo "<script>
-                  Swal.fire({
-                    title: 'Error!',
-                    text: 'Error in making reservation!',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                  }).then((result) => {
-                    if(result.isConfirmed) {
-                      window.location.href = 'index.php';
-                    }
-                  });
-                </script>";
-              }
-              $stmt->close();
-              $conn->close();
+            if ($stmt->execute()) {
+              echo "<script>
+                Swal.fire({
+                  title: 'Success!',
+                  text: 'You have successfully reserved a room!',
+                  icon: 'success',
+                  confirmButtonText: 'OK',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    window.location = 'index.php';
+                  }
+                });
+              </script>";
+            } else {
+              echo $stmt->error;
             }
-            ?>
-            <form action="reservation.php" method="get" class="bg-white p-md-5 p-4 mb-5 border">
+            $stmt->close();
+          }
+          $conn->close();
+          ?>
+            <form action="reservation.php?id=<?php echo $_GET['id'];?>" method="POST" class="bg-white p-md-5 p-4 mb-5 border">
               <div class="row">
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="name">Name</label>
-                  <input type="text" name="name" id="name" class="form-control ">
+                  <?php
+                    if (isset($_SESSION['username'])) {
+                      echo "<input type='text' name='name' id='name' value='" . $_SESSION['username'] . "' class='form-control' disabled>";
+                    } else {
+                      echo "<input type='text' name='name' id='name' class='form-control'>";
+                    };
+                  ?>
                 </div>
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="phone">Phone</label>
-                  <input type="text" name="phone" id="phone" class="form-control ">
+                  <?php
+                    if (isset($_SESSION['phone'])) {
+                      echo "<input type='text' name='phone' id='phone' value='" . $_SESSION['phone'] . "' class='form-control' disabled>";
+                    } else {
+                      echo "<input type='text' name='phone' id='phone' class='form-control'>";
+                    };
+                    ?>
                 </div>
               </div>
           
               <div class="row">
                 <div class="col-md-12 form-group">
                   <label class="text-black font-weight-bold" for="email">Email</label>
-                  <input type="email" name="email" id="email" class="form-control ">
+                  <?php
+                    if(isset($_SESSION['email'])) {
+                      echo "<input type='email' name='email' id='email' value='" . $_SESSION['email'] . "' class='form-control' disabled>";
+                    } else {
+                      echo "<input type='email' name='email' id='email' class='form-control'>";
+                    };
+                  ?>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="checkin_date">Date Check In</label>
-                  <input type="text" name="checkin_date" id="checkin_date" class="form-control">
+                  <input type="text" name="checkin_date" id="checkin_date" class="form-control" required>
                 </div>
                 <div class="col-md-6 form-group">
                   <label class="text-black font-weight-bold" for="checkout_date">Date Check Out</label>
-                  <input type="text" name="checkout_date" id="checkout_date" class="form-control">
+                  <input type="text" name="checkout_date" id="checkout_date" class="form-control" required>
                 </div>
               </div>
 
@@ -206,20 +212,15 @@
                   </div>
                 </div>
               </div>
-
-              
-
               <div class="row mb-4">
                 <div class="col-md-12 form-group">
                   <label class="text-black font-weight-bold" for="message">Notes</label>
-                  <textarea name="notes" id="message" class="form-control " cols="30" rows="8"></textarea>
+                  <textarea name="notes" id="notes" class="form-control " cols="30" rows="8"></textarea>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6 form-group">
-                  <form action="reservation" method="post">
                     <input type="submit" value="Reserve Now" class="btn btn-primary text-white py-3 px-5">
-                  </form>
                 </div>
               </div>
             </form>
@@ -229,7 +230,7 @@
               <div class="col-md-10 ml-auto contact-info">
                 <p><span class="d-block">Address:</span> <span class="text-black"> 98 West 21th Street, Suite 721 New York NY 10016</span></p>
                 <p><span class="d-block">Phone:</span> <span class="text-black"> (+1) 435 3533</span></p>
-                <p><span class="d-block">Email:</span> <span class="text-black"> info@yourdomain.com</span></p>
+                <p><span class="d-block">Email:</span> <span class="text-black"> SogoHotel@gmail.com </span></p>
               </div>
             </div>
           </div>
@@ -318,9 +319,6 @@
 
       </div>
     </section>
-
-    
-    
     <section class="section bg-image overlay" style="background-image: url('images/hero_4.jpg');">
         <div class="container" >
           <div class="row align-items-center">
@@ -385,24 +383,17 @@
           </p>
         </div>
       </div>
-    </footer>
-    
+    </footer> 
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/jquery-migrate-3.0.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/jquery.stellar.min.js"></script>
-    <script src="js/jquery.fancybox.min.js"></script>
-    
-    
-    <script src="js/aos.js"></script>
-    
+    <script src="js/jquery.fancybox.min.js"></script>    
+    <script src="js/aos.js"></script> 
     <script src="js/bootstrap-datepicker.js"></script> 
     <script src="js/jquery.timepicker.min.js"></script> 
-
-    
-
     <script src="js/main.js"></script>
   </body>
 </html>

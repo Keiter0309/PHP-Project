@@ -93,10 +93,12 @@
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = $_POST['username'];
             $email = $_POST['email'];
+            $phone = $_POST['phone'];
             $password = $_POST['password'];
             $confirm_password = $_POST['confirm_password'];
             $_SESSION['username'] = $name;
             $_SESSION['email'] = $email;
+            $_SESSION['phone'] = $phone;
             if ($password != $confirm_password) {
                 echo '<script>
                     Swal.fire({
@@ -122,7 +124,7 @@
             });
         </script>';
     } else {
-        $sql = "INSERT INTO users (username, email, password) VALUES ('$name', '$email', '$hashed_password')";
+        $sql = "INSERT INTO users (username, email, password, phone) VALUES ('$name', '$email', '$hashed_password', '$phone')";
         if ($conn->query($sql) === TRUE) {
             echo '<script>
                 Swal.fire({
@@ -162,6 +164,11 @@
                                 <label for="inputEmail">Email</label>
                                 <input class="form-control" id="inputEmail" type="email" name="email"
                                     placeholder="Enter email address" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPhone">Phone</label>
+                                <input class="form-control" id="inputPhone" type="number" name="phone"
+                                    placeholder="Enter phone number" required />
                             </div>
                             <div class="form-group">
                                 <label for="inputPassword">Password</label>

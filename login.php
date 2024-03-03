@@ -117,6 +117,8 @@ session_start();
                 if (password_verify($password, $row['password'])) {
                     $_SESSION['user_id'] = $row['id'];
                     $_SESSION['username'] = $row['username'];
+                    $_SESSION['email'] = $row['email'];
+                    $_SESSION['phone'] = $row['phone'];
                     echo "<script>
                         Swal.fire({
                             title: 'Success!',

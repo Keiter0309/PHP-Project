@@ -263,7 +263,7 @@ $conn->close();
                                       <i class="icon_star"></i>
                                       <i class="icon_star-half_alt"></i>
                                   </div>
-                                  <a href="reservation.php?id=<?php echo $room['id']; ?>" class='btn btn-primary'>Booking Now</a>
+                                  <a href="reservation.php?id=<?php echo $room['id'];?>" class='btn btn-primary'>Booking Now</a>
                               </div>
                           </div>
                           <h2 class="mt-4"><?php echo $room['price']; ?>$<span>/Pernight</span></h2>
