@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE HTML>
 <html>
   <head>
@@ -101,7 +104,6 @@
           <div class="col-md-7" data-aos="fade-up" data-aos-delay="100">
           <?php 
           include 'php/db_connect.php';
-          session_start();
           if(isset($_SESSION['username']) && isset($_SESSION['phone']) && isset($_SESSION['email']) && isset($_POST['checkin_date']) && isset($_POST['checkout_date']) && isset($_POST['adults']) && isset($_POST['children']) && isset($_POST['notes']) && isset($_GET['id'])) {
             $user_id = $_SESSION['user_id'];
             $room_id = $_GET['id'];
@@ -127,7 +129,7 @@
                   confirmButtonText: 'OK',
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    window.location = 'index.php';
+                    window.location = 'payment.php?id=$room_id';
                   }
                 });
               </script>";

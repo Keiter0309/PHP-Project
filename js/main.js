@@ -211,3 +211,16 @@
 
 
 })(jQuery);
+
+  let banking = document.getElementById('banking');
+  let cash = document.getElementById('cash');
+
+  document.addEventListener('click', ()=>{
+    if(banking.checked){
+      document.getElementById('banking-details').style.display = 'block';
+      document.getElementById('cash-details').style.display = 'none';
+    }else if(cash.checked){
+      document.getElementById('banking-details').style.display = 'none';
+    }
+  }
+  );
