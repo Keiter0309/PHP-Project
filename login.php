@@ -119,6 +119,8 @@ session_start();
                     $_SESSION['username'] = $row['username'];
                     $_SESSION['email'] = $row['email'];
                     $_SESSION['phone'] = $row['phone'];
+                    $role = $row['role'];
+                    
                     echo "<script>
                         Swal.fire({
                             title: 'Success!',
@@ -127,7 +129,11 @@ session_start();
                             confirmButtonText: 'OK',
                         }).then((result) => {
                             if (result.isConfirmed) {
+                              if('$role' == 'admin') {
+                                window.location = 'admin/index.php';
+                              } else {
                                 window.location = 'index.php';
+                              } 
                             }
                         });
                     </script>";
